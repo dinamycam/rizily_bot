@@ -67,6 +67,7 @@ def inlinequery(bot, update):
 
 def shorten(website, link):
     print(link)
+    logger.info("a user shortened {} just now".format(link))
     if website == "Bitly":
         bitly = "a3711a7b536d591236a934b81ad6316fd7095bb8"
         shortener = Shortener('Bitly', bitly_token=bitly)
