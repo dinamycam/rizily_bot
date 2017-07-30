@@ -63,6 +63,12 @@ def inlinequery(bot, update):
     shorten("Bitly", query),
     parse_mode=ParseMode.HTML)))
 
+
+    results.append(InlineQueryResultArticle(id=uuid4(),
+                                            title="with Adf.ly",
+                                            input_message_content=InputTextMessageContent(
+                                                shorten("Adfly", query),
+                                                parse_mode=ParseMode.HTML)))
     update.inline_query.answer(results)
 
 def shorten(website, link):
@@ -75,7 +81,7 @@ def shorten(website, link):
             result = shortener.short(link)
             return result
         except:
-            return "enter a valid url"
+            return "failed : invalid url"
     if website == "Google":
         api_key = "AIzaSyAENcBzlF5fK8lgopX38n8o9u8gLBEmNFc"
         shortener = Shortener('Google', api_key=api_key)
@@ -84,7 +90,15 @@ def shorten(website, link):
             # print("result")
             return result
         except:
-            return "url invalid"
+            return "failed : url invalid"
+    if website == "Adfly":
+        uid = "17552095"
+        api_key = "e48581125d5b9fc363913d6a1785f2e9"
+        shortener = Shortener('Adfly')
+        try:
+            result = shortener.short(link, uid=uid, api_key=api_key, type='int')
+        except:
+            return "failed : url invalid"
     return "enter a valid url"
 
 def error(bot, update, error):
