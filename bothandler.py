@@ -64,11 +64,11 @@ def inlinequery(bot, update):
     parse_mode=ParseMode.HTML)))
 
 
-    # results.append(InlineQueryResultArticle(id=uuid4(),
-    # title="with Adf.ly",
-    # input_message_content=InputTextMessageContent(
-    # shorten("Adfly", query),
-    # parse_mode=ParseMode.HTML)))
+    results.append(InlineQueryResultArticle(id=uuid4(),
+    title="with Adf.ly",
+    input_message_content=InputTextMessageContent(
+    shorten("Adfly", query),
+    parse_mode=ParseMode.HTML)))
 
     update.inline_query.answer(results)
 
@@ -95,7 +95,7 @@ def shorten(website, link):
     if website == "Adfly":
         uid = "17552095"
         api_key = "e48581125d5b9fc363913d6a1785f2e9"
-        shortener = Shortener('AdflyShortener', uid=uid, api_key=api_key, type='int')
+        shortener = Shortener('AdflyShortener', uid=uid, key=api_key, type='int')
         try:
             result = shortener.short(link)
         except:
