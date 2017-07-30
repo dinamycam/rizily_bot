@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# Simple Bot to reply to Telegram messages
-# This program is dedicated to the public domain under the CC0 license.
 """
 This Bot uses the Updater class to handle the bot.
 
@@ -10,14 +8,12 @@ the Dispatcher and registered at their respective places.
 Then, the bot is started and runs until we press Ctrl-C on the command line.
 
 Usage:
-Basic inline bot example. Applies different text transformations.
+A url shortener bot.it uses different APIs to do that.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 from uuid import uuid4
-
-import re
-
+from urllib.parse import urlparse
 from telegram import InlineQueryResultArticle, ParseMode, \
 InputTextMessageContent
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler
@@ -38,38 +34,49 @@ def start(bot, update):
 
 
 def help(bot, update):
-    update.message.reply_text('Help!')
+    update.message.reply_text('Help! Help! LOL =))))')
 
 
-def escape_markdown(text):
-    """Helper function to escape telegram markup symbols"""
-    escape_chars = '\*_`\['
-    return re.sub(r'([%s])' % escape_chars, r'\\\1', text)
+def url_check(url):
+    min_attr = ('scheme' , 'netloc')
+    try:
+        result = urlparse(url)
+        if all([result.scheme, result.netloc]):
+            return True
+        else:
+            return False
+    except:
+        return False
 
 
 def inlinequery(bot, update):
     query = update.inline_query.query
     results = list()
 
-    results.append(InlineQueryResultArticle(id=uuid4(),
-    title="with Google",
-    input_message_content=InputTextMessageContent(
-    shorten("Google", query),
-    parse_mode=ParseMode.HTML)))
+    if url_check(query):
+        results.append(InlineQueryResultArticle(id=uuid4(),
+        title="with Google",
+        input_message_content=InputTextMessageContent(
+        shorten("Google", query),
+        parse_mode=ParseMode.HTML)))
 
-    results.append(InlineQueryResultArticle(id=uuid4(),
-    title="with Bit.ly",
-    input_message_content=InputTextMessageContent(
-    shorten("Bitly", query),
-    parse_mode=ParseMode.HTML)))
+        results.append(InlineQueryResultArticle(id=uuid4(),
+        title="with Bit.ly",
+        input_message_content=InputTextMessageContent(
+        shorten("Bitly", query),
+        parse_mode=ParseMode.HTML)))
 
-
-    results.append(InlineQueryResultArticle(id=uuid4(),
-    title="with Adf.ly",
-    input_message_content=InputTextMessageContent(
-    shorten("Adfly", query),
-    parse_mode=ParseMode.HTML)))
-
+        results.append(InlineQueryResultArticle(id=uuid4(),
+        title="with Adf.ly",
+        input_message_content=InputTextMessageContent(
+        shorten("Adfly", query),
+        parse_mode=ParseMode.HTML)))
+    else:
+        results.clear()
+        results.append(InlineQueryResultArticle(id=uuid4(),
+        title="Link INVALID...",
+        input_message_content=InputTextMessageContent("@rizilybot"),
+        ))
     update.inline_query.answer(results)
 
 def shorten(website, link):
