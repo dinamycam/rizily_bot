@@ -12,6 +12,7 @@ A url shortener bot.it uses different APIs to do that.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
+import os,subprocess
 from uuid import uuid4
 from urllib.parse import urlparse
 from telegram import InlineQueryResultArticle, ParseMode, \
@@ -113,10 +114,21 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"' % (update, error))
 
 
+def get_token(env_var):
+    token = os.getenv(env_var)
+    if token is None or token == '':
+        token = subprocess.call(["echo", "${env_var}"])
+
+    if token:
+        # print(token)
+        return token
+    # raise Exception("Err: shell variable not fonud")
+
+
 def main():
     # Create the Updater and pass it your bot's token.
     #TODO get the tokens to a config file beside the project
-    updater = Updater("407670157:AAHXShx8MfTPXm69WcIWD95zBvmRJIpuF50")
+    updater = Updater(get_token("RIZILY_BOT"))
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
